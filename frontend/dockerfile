@@ -1,0 +1,20 @@
+# Используем официальный Node.js образ
+FROM node:20-alpine
+
+# Устанавливаем рабочую директорию
+WORKDIR /app
+
+# Копируем package.json и lock файл
+COPY package.json pnpm-lock.yaml ./
+
+# Устанавливаем зависимости
+RUN npm install -g pnpm && pnpm install
+
+# Копируем остальной код
+COPY . .
+
+# Собираем фронт
+RUN pnpm build
+
+# Запуск фронта
+CMD ["pnpm", "start"]
