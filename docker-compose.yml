@@ -1,84 +1,67 @@
-version: '3.8'
+version: '3'
 
 services:
-  frontend:
+  api:
     build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "3000:3000"
-    environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
-      NEXT_PUBLIC_DIRECTUS_URL: http://localhost:8055
-      NEXT_PUBLIC_DIRECTUS_TOKEN: your-static-token
-    depends_on:
-      - backend
-      - directus
-
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-    ports:
       - "8000:8000"
+    volumes:
+      - ./app:/app
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST: postgres
-      POSTGRES_PORT: 5432
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ugai
+      - DIRECTUS_URL=http://directus:8055
+      - DIRECTUS_TOKEN=${DIRECTUS_TOKEN}
+      - DIRECTUS_EMAIL=${DIRECTUS_EMAIL}
+      - DIRECTUS_PASSWORD=${DIRECTUS_PASSWORD}
+      - SECRET_KEY=${SECRET_KEY}
     depends_on:
-      - postgres
+      - db
+      - directus
+    networks:
+      - ugai-network
+
+  db:
+    image: postgres:14
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=ugai
+    ports:
+      - "5432:5432"
+    networks:
+      - ugai-network
 
   directus:
     image: directus/directus:latest
     ports:
       - "8055:8055"
+    volumes:
+      - ./directus/uploads:/directus/uploads
+      - ./directus/extensions:/directus/extensions
     environment:
       KEY: ${DIRECTUS_KEY}
       SECRET: ${DIRECTUS_SECRET}
-      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
-      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
-      DB_CLIENT: pg
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_DATABASE: ${POSTGRES_DB}
-      DB_USER: ${POSTGRES_USER}
-      DB_PASSWORD: ${POSTGRES_PASSWORD}
-      WEBSOCKETS_ENABLED: true
+      DB_CLIENT: 'pg'
+      DB_HOST: 'db'
+      DB_PORT: '5432'
+      DB_DATABASE: 'ugai'
+      DB_USER: 'postgres'
+      DB_PASSWORD: 'postgres'
+      ADMIN_EMAIL: ${DIRECTUS_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_PASSWORD}
+      PUBLIC_URL: ${NEXT_PUBLIC_DIRECTUS_URL}
     depends_on:
-      - postgres
+      - db
+    networks:
+      - ugai-network
 
-  postgres:
-    image: postgres:15
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      POSTGRES_DB: ${POSTGRES_DB}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  n8n:
-    image: n8nio/n8n
-    ports:
-      - "5678:5678"
-    environment:
-      - DB_TYPE=postgresdb
-      - DB_POSTGRESDB_HOST=postgres
-      - DB_POSTGRESDB_PORT=5432
-      - DB_POSTGRESDB_DATABASE=${POSTGRES_DB}
-      - DB_POSTGRESDB_USER=${POSTGRES_USER}
-      - DB_POSTGRESDB_PASSWORD=${POSTGRES_PASSWORD}
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=admin123
-      - WEBHOOK_URL=http://localhost:5678
-    depends_on:
-      - postgres
+networks:
+  ugai-network:
+    driver: bridge
 
 volumes:
-  pgdata:
+  postgres_data:

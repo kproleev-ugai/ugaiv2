@@ -1,0 +1,231 @@
+{
+  "collection": "notifications",
+  "fields": [
+    {
+      "field": "id",
+      "type": "uuid",
+      "meta": {
+        "hidden": true,
+        "readonly": true,
+        "interface": "input",
+        "special": ["uuid"]
+      },
+      "schema": {
+        "is_primary_key": true,
+        "has_auto_increment": false
+      }
+    },
+    {
+      "field": "type",
+      "type": "string",
+      "meta": {
+        "interface": "select-dropdown",
+        "width": "half",
+        "options": {
+          "choices": [
+            {
+              "text": "Информация",
+              "value": "info"
+            },
+            {
+              "text": "Предупреждение",
+              "value": "warning"
+            },
+            {
+              "text": "Успех",
+              "value": "success"
+            },
+            {
+              "text": "Ошибка",
+              "value": "error"
+            }
+          ]
+        }
+      },
+      "schema": {
+        "default_value": "info",
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "title",
+      "type": "string",
+      "meta": {
+        "interface": "input",
+        "width": "full",
+        "options": {
+          "placeholder": "Заголовок уведомления"
+        }
+      },
+      "schema": {
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "description",
+      "type": "text",
+      "meta": {
+        "interface": "input-multiline",
+        "width": "full",
+        "options": {
+          "placeholder": "Текст уведомления"
+        }
+      },
+      "schema": {
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "time",
+      "type": "string",
+      "meta": {
+        "interface": "input",
+        "width": "half",
+        "options": {
+          "placeholder": "Время уведомления (ЧЧ:ММ)"
+        }
+      },
+      "schema": {
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "date",
+      "type": "string",
+      "meta": {
+        "interface": "input",
+        "width": "half",
+        "options": {
+          "placeholder": "Дата уведомления (ДД.ММ.ГГГГ)"
+        }
+      },
+      "schema": {
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "read",
+      "type": "boolean",
+      "meta": {
+        "interface": "boolean",
+        "width": "half"
+      },
+      "schema": {
+        "default_value": false,
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "category",
+      "type": "string",
+      "meta": {
+        "interface": "select-dropdown",
+        "width": "half",
+        "options": {
+          "choices": [
+            {
+              "text": "Система",
+              "value": "system"
+            },
+            {
+              "text": "Задача",
+              "value": "task"
+            },
+            {
+              "text": "Проект",
+              "value": "project"
+            },
+            {
+              "text": "Сообщение",
+              "value": "message"
+            },
+            {
+              "text": "Календарь",
+              "value": "calendar"
+            }
+          ]
+        }
+      },
+      "schema": {
+        "default_value": "system",
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "action",
+      "type": "string",
+      "meta": {
+        "interface": "input",
+        "width": "full",
+        "options": {
+          "placeholder": "Действие при клике"
+        }
+      },
+      "schema": {
+        "is_nullable": true
+      }
+    },
+    {
+      "field": "user_id",
+      "type": "uuid",
+      "meta": {
+        "interface": "select-dropdown-m2o",
+        "width": "full",
+        "options": {
+          "template": "{{name}}"
+        }
+      },
+      "schema": {
+        "is_nullable": false,
+        "foreign_key_table": "users",
+        "foreign_key_column": "id"
+      }
+    },
+    {
+      "field": "user_created",
+      "type": "uuid",
+      "meta": {
+        "interface": "select-dropdown-m2o",
+        "hidden": true,
+        "width": "half",
+        "special": ["user-created"],
+        "options": {
+          "template": "{{name}}"
+        }
+      },
+      "schema": {
+        "is_nullable": true,
+        "foreign_key_table": "users",
+        "foreign_key_column": "id"
+      }
+    },
+    {
+      "field": "created_at",
+      "type": "timestamp",
+      "meta": {
+        "interface": "datetime",
+        "width": "half",
+        "readonly": true,
+        "hidden": true,
+        "special": ["date-created"]
+      },
+      "schema": {
+        "is_nullable": false
+      }
+    },
+    {
+      "field": "updated_at",
+      "type": "timestamp",
+      "meta": {
+        "interface": "datetime",
+        "width": "half",
+        "readonly": true,
+        "hidden": true,
+        "special": ["date-updated"]
+      },
+      "schema": {
+        "is_nullable": true
+      }
+    }
+  ]
+}

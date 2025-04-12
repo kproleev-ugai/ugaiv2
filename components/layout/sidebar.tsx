@@ -1,134 +1,92 @@
 "use client"
 
+import type React from "react"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import {
-  BarChart2,
-  Calendar,
-  CheckSquare,
-  Target,
-  Bot,
-  MessageSquare,
-  MessageCircle,
-  Settings,
-  FileText,
-} from "lucide-react"
-import {
-  Sidebar as SidebarComponent,
-  SidebarContent,
-  SidebarHeader,
-  SidebarFooter,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-  SidebarGroup,
-  SidebarGroupLabel,
-  SidebarGroupContent,
-  SidebarRail,
-} from "@/components/ui/sidebar"
-import { Logo } from "@/components/common/logo"
-import type { NavSection } from "@/types/index"
+import { BarChart3, FileText, Home, LayoutDashboard, Settings, Users, FolderOpen, Calendar } from "lucide-react"
 
-export function Sidebar() {
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+
+interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
+
+export function Sidebar({ className }: SidebarProps) {
   const pathname = usePathname()
 
-  const routes: NavSection[] = [
+  const routes = [
     {
-      title: "Основное",
-      items: [
-        {
-          title: "Аналитика данных",
-          href: "/analytics",
-          icon: BarChart2,
-        },
-        {
-          title: "Задачи",
-          href: "/tasks",
-          icon: CheckSquare,
-        },
-        {
-          title: "Календарь",
-          href: "/calendar",
-          icon: Calendar,
-        },
-        {
-          title: "ОКР система",
-          href: "/okr",
-          icon: Target,
-        },
-      ],
+      label: "Главная",
+      icon: Home,
+      href: "/",
+      color: "text-sky-500",
     },
     {
-      title: "Коммуникации",
-      items: [
-        {
-          title: "ИИ ассистенты",
-          href: "/ai-assistants",
-          icon: Bot,
-        },
-        {
-          title: "Внутренние чаты",
-          href: "/chats",
-          icon: MessageSquare,
-        },
-        {
-          title: "Комментарии",
-          href: "/comments",
-          icon: MessageCircle,
-        },
-      ],
+      label: "Панель управления",
+      icon: LayoutDashboard,
+      href: "/dashboard",
+      color: "text-violet-500",
     },
     {
-      title: "Управление",
-      items: [
-        {
-          title: "Отчеты",
-          href: "/reports",
-          icon: FileText,
-        },
-        {
-          title: "Настройки",
-          href: "/settings",
-          icon: Settings,
-        },
-      ],
+      label: "Проекты",
+      icon: FolderOpen,
+      href: "/projects",
+      color: "text-pink-500",
+    },
+    {
+      label: "Документы",
+      icon: FileText,
+      href: "/documents",
+      color: "text-orange-500",
+    },
+    {
+      label: "Аналитика",
+      icon: BarChart3,
+      href: "/analytics",
+      color: "text-emerald-500",
+    },
+    {
+      label: "Пользователи",
+      icon: Users,
+      href: "/users",
+      color: "text-blue-500",
+    },
+    {
+      label: "Календарь",
+      icon: Calendar,
+      href: "/calendar",
+      color: "text-rose-500",
+    },
+    {
+      label: "Настройки",
+      icon: Settings,
+      href: "/settings",
+      color: "text-gray-500",
     },
   ]
 
   return (
-    <SidebarComponent variant="inset" collapsible="icon">
-      <SidebarHeader className="flex items-center h-14 px-4">
-        <Logo />
-      </SidebarHeader>
-      <SidebarContent>
-        {routes.map((section, i) => (
-          <SidebarGroup key={i}>
-            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {section.items.map((item, j) => (
-                  <SidebarMenuItem key={j}>
-                    <SidebarMenuButton asChild isActive={pathname === item.href} tooltip={item.title}>
-                      <Link href={item.href}>
-                        {item.icon && <item.icon className="h-4 w-4" />}
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-      <SidebarFooter className="p-4 border-t">
-        <div className="text-xs text-muted-foreground">
-          <p>© 2025 AI Strategy Solutions</p>
-          <p>Версия 1.0.0</p>
+    <div className={cn("pb-12 h-full", className)}>
+      <div className="space-y-4 py-4">
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">Навигация</h2>
+          <div className="space-y-1">
+            {routes.map((route) => (
+              <Button
+                key={route.href}
+                variant={pathname === route.href ? "secondary" : "ghost"}
+                className={cn("w-full justify-start", pathname === route.href && "bg-secondary")}
+                asChild
+              >
+                <Link href={route.href}>
+                  <route.icon className={cn("mr-2 h-5 w-5", route.color)} />
+                  {route.label}
+                </Link>
+              </Button>
+            ))}
+          </div>
         </div>
-      </SidebarFooter>
-      <SidebarRail />
-    </SidebarComponent>
+      </div>
+    </div>
   )
 }
-

@@ -1,22 +1,11 @@
-FROM node:20-alpine
+FROM python:3.11-slim
 
-# Установка pnpm
-RUN npm install -g pnpm
-
-# Рабочая директория
 WORKDIR /app
 
-# Копируем манифесты
-COPY package.json pnpm-lock.yaml ./
+COPY requirements.txt .
 
-# Устанавливаем зависимости
-RUN pnpm install
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем весь проект (включая frontend)
 COPY . .
 
-# Открываем порт
-EXPOSE 3000
-
-# Запуск dev-сервера
-CMD ["pnpm", "dev"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
