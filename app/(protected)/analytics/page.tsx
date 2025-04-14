@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
   CartesianGrid,
-  Tooltip,
+  Tooltip as RechartsTooltip,
   Legend,
   ResponsiveContainer,
   PieChart,
@@ -21,6 +21,7 @@ import {
 } from "recharts"
 import { ArrowUpRight, ArrowDownRight, Brain } from "lucide-react"
 import { PersonalizedDashboard } from "@/components/analytics/personalized-dashboard" // Import the new component
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 // Данные для графиков
 const enrollmentData = [
@@ -64,172 +65,174 @@ const revenueData = [
 
 export default function AnalyticsPage() {
   return (
-    <div className="space-y-6">
-      <PersonalizedDashboard />
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Динамика зачислений</CardTitle>
-                <CardDescription>Количество новых студентов по месяцам</CardDescription>
-              </div>
-              <Badge
-                variant="outline"
-                className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
-              >
-                <Brain className="mr-1 h-2 w-2" />
-                AI
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={enrollmentData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} name="Новые студенты" />
-              </LineChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Статус студентов</CardTitle>
-                <CardDescription>Распределение студентов по статусам</CardDescription>
-              </div>
-              <Badge
-                variant="outline"
-                className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
-              >
-                <Brain className="mr-1 h-2 w-2" />
-                AI
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <PieChart>
-                <Pie
-                  data={studentStatusData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+    <TooltipProvider>
+      <div className="space-y-6">
+        <PersonalizedDashboard />
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Динамика зачислений</CardTitle>
+                  <CardDescription>Количество новых студентов по месяцам</CardDescription>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
                 >
-                  {studentStatusData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+                  <Brain className="mr-1 h-2 w-2" />
+                  AI
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={enrollmentData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <RechartsTooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={2} name="Новые студенты" />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Статус студентов</CardTitle>
+                  <CardDescription>Распределение студентов по статусам</CardDescription>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
+                >
+                  <Brain className="mr-1 h-2 w-2" />
+                  AI
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={studentStatusData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {studentStatusData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <RechartsTooltip />
+                  <Legend />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Популярность курсов</CardTitle>
+                  <CardDescription>Количество студентов по направлениям</CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={courseData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <RechartsTooltip />
+                  <Legend />
+                  <Bar dataKey="students" fill="#3b82f6" name="Студенты" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle>Доход по месяцам</CardTitle>
+                  <CardDescription>Динамика дохода за последние 6 месяцев</CardDescription>
+                </div>
+                <Badge
+                  variant="outline"
+                  className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
+                >
+                  <Brain className="mr-1 h-2 w-2" />
+                  AI
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={revenueData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <RechartsTooltip formatter={(value) => [`₽${value.toLocaleString()}`, "Доход"]} />
+                  <Legend />
+                  <Bar dataKey="value" fill="#22c55e" name="Доход" />
+                </BarChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Эффективность курсов</CardTitle>
+            <CardDescription>Сравнение популярности и доходности курсов</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {courseData.map((course, index) => (
+                <div key={index} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">{course.name}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {course.students} студентов | ₽{course.revenue.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Студенты</span>
+                        <span>{Math.round((course.students / 120) * 100)}%</span>
+                      </div>
+                      <Progress value={(course.students / 120) * 100} className="h-2" />
+                    </div>
+                    <div className="flex-1 space-y-1">
+                      <div className="flex items-center justify-between text-sm">
+                        <span>Доход</span>
+                        <span>{Math.round((course.revenue / 1200000) * 100)}%</span>
+                      </div>
+                      <Progress value={(course.revenue / 1200000) * 100} className="h-2" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Популярность курсов</CardTitle>
-                <CardDescription>Количество студентов по направлениям</CardDescription>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={courseData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="students" fill="#3b82f6" name="Студенты" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div>
-                <CardTitle>Доход по месяцам</CardTitle>
-                <CardDescription>Динамика дохода за последние 6 месяцев</CardDescription>
-              </div>
-              <Badge
-                variant="outline"
-                className="ml-2 text-[9px] h-3.5 px-1 py-0 border-indigo-200 bg-indigo-50 text-indigo-700"
-              >
-                <Brain className="mr-1 h-2 w-2" />
-                AI
-              </Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={revenueData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis />
-                <Tooltip formatter={(value) => [`₽${value.toLocaleString()}`, "Доход"]} />
-                <Legend />
-                <Bar dataKey="value" fill="#22c55e" name="Доход" />
-              </BarChart>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Эффективность курсов</CardTitle>
-          <CardDescription>Сравнение популярности и доходности курсов</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {courseData.map((course, index) => (
-              <div key={index} className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{course.name}</span>
-                  <span className="text-sm text-muted-foreground">
-                    {course.students} студентов | ₽{course.revenue.toLocaleString()}
-                  </span>
-                </div>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>Студенты</span>
-                      <span>{Math.round((course.students / 120) * 100)}%</span>
-                    </div>
-                    <Progress value={(course.students / 120) * 100} className="h-2" />
-                  </div>
-                  <div className="flex-1 space-y-1">
-                    <div className="flex items-center justify-between text-sm">
-                      <span>Доход</span>
-                      <span>{Math.round((course.revenue / 1200000) * 100)}%</span>
-                    </div>
-                    <Progress value={(course.revenue / 1200000) * 100} className="h-2" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+    </TooltipProvider>
   )
 }
 
