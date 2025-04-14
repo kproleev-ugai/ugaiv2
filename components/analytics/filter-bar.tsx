@@ -27,6 +27,9 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import type { DateRange } from "react-day-picker"
 import { addDays, format } from "date-fns"
 import { DatePickerWithRange } from "@/components/ui/date-range-picker"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
+import { Checkbox } from "@/components/ui/checkbox"
 
 interface FilterSet {
   id: string
@@ -43,7 +46,11 @@ interface FilterSet {
   }
 }
 
-export function FilterBar() {
+interface FilterBarProps {
+  onClose?: () => void
+}
+
+export function FilterBar({ onClose }: FilterBarProps) {
   const { toast } = useToast()
   const [expanded, setExpanded] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -67,6 +74,11 @@ export function FilterBar() {
     product: "all",
     category: "all",
     manager: "all",
+    source: "",
+    campaign: "",
+    device: "",
+    country: "",
+    showBots: false,
   })
 
   // Загрузка сохраненных фильтров из localStorage при монтировании
@@ -159,6 +171,11 @@ export function FilterBar() {
       product: "all",
       category: "all",
       manager: "all",
+      source: "",
+      campaign: "",
+      device: "",
+      country: "",
+      showBots: false,
     })
     setDate({
       from: new Date(),
@@ -189,6 +206,23 @@ export function FilterBar() {
   }
 
   const activeFiltersCount = countActiveFilters()
+
+  const handleReset = () => {
+    setFilters({
+      ...filters,
+      source: "",
+      campaign: "",
+      device: "",
+      country: "",
+      showBots: false,
+    })
+  }
+
+  const handleApply = () => {
+    // Применение фильтров
+    console.log("Applied filters:", filters)
+    onClose && onClose()
+  }
 
   return (
     <div className="border-b bg-gray-950 dark:bg-gray-950 p-1 relative">
@@ -395,6 +429,88 @@ export function FilterBar() {
               </SelectContent>
             </Select>
           </div>
+          <Card className="mb-6">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-lg">Дополнительные Фильтры</CardTitle>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="source">Источник</Label>
+                  <Select value={filters.source} onValueChange={(value) => setFilters({ ...filters, source: value })}>
+                    <SelectTrigger id="source">
+                      <SelectValue placeholder="Выберите источник" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все источники</SelectItem>
+                      <SelectItem value="organic">Органический поиск</SelectItem>
+                      <SelectItem value="direct">Прямые переходы</SelectItem>
+                      <SelectItem value="referral">Реферальные ссылки</SelectItem>
+                      <SelectItem value="social">Социальные сети</SelectItem>
+                      <SelectItem value="email">Email-рассылки</SelectItem>
+                      <SelectItem value="paid">Платная реклама</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="campaign">Кампания</Label>
+                  <Input
+                    id="campaign"
+                    placeholder="Название кампании"
+                    value={filters.campaign}
+                    onChange={(e) => setFilters({ ...filters, campaign: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="device">Устройство</Label>
+                  <Select value={filters.device} onValueChange={(value) => setFilters({ ...filters, device: value })}>
+                    <SelectTrigger id="device">
+                      <SelectValue placeholder="Выберите устройство" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все устройства</SelectItem>
+                      <SelectItem value="desktop">Десктоп</SelectItem>
+                      <SelectItem value="mobile">Мобильные</SelectItem>
+                      <SelectItem value="tablet">Планшеты</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="country">Страна</Label>
+                  <Select value={filters.country} onValueChange={(value) => setFilters({ ...filters, country: value })}>
+                    <SelectTrigger id="country">
+                      <SelectValue placeholder="Выберите страну" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">Все страны</SelectItem>
+                      <SelectItem value="ru">Россия</SelectItem>
+                      <SelectItem value="us">США</SelectItem>
+                      <SelectItem value="gb">Великобритания</SelectItem>
+                      <SelectItem value="de">Германия</SelectItem>
+                      <SelectItem value="fr">Франция</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-4">
+                <Checkbox
+                  id="showBots"
+                  checked={filters.showBots}
+                  onCheckedChange={(checked) => setFilters({ ...filters, showBots: !!checked })}
+                />
+                <Label htmlFor="showBots">Показывать ботов</Label>
+              </div>
+            </CardContent>
+            <CardFooter className="flex justify-between">
+              <Button variant="outline" onClick={handleReset}>
+                Сбросить
+              </Button>
+              <Button onClick={handleApply}>Применить</Button>
+            </CardFooter>
+          </Card>
         </>
       )}
 

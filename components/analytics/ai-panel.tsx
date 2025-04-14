@@ -1,154 +1,106 @@
 "use client"
 
 import { useState } from "react"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChevronLeft, ChevronRight, Send, Bot, Maximize2, Minimize2 } from "lucide-react"
-import { cn } from "@/lib/utils"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
-
-interface AIMessage {
-  role: "user" | "assistant"
-  content: string
-  timestamp: Date
-}
+import { Textarea } from "@/components/ui/textarea"
+import { X, Send, Brain, Sparkles, BarChart2, TrendingUp, LineChart } from "lucide-react"
 
 interface AIPanelProps {
-  collapsed: boolean
-  onToggle: () => void
+  onClose: () => void
 }
 
-export function AIPanel({ collapsed = false, onToggle }: AIPanelProps) {
-  const [expanded, setExpanded] = useState(false)
-  const [input, setInput] = useState("")
-  const [messages, setMessages] = useState<AIMessage[]>([
-    {
-      role: "assistant",
-      content:
-        "Привет! Я ваш AI-ассистент по аналитике. Я могу помочь вам с анализом данных, созданием отчетов и ответить на вопросы о ваших бизнес-показателях. Что вы хотели бы узнать?",
-      timestamp: new Date(),
-    },
-  ])
+export function AIPanel({ onClose }: AIPanelProps) {
+  const [query, setQuery] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [response, setResponse] = useState<string | null>(null)
 
-  const handleSendMessage = () => {
-    if (!input.trim()) return
+  const handleSubmit = async () => {
+    if (!query.trim()) return
 
-    // Добавляем сообщение пользователя
-    const userMessage: AIMessage = {
-      role: "user",
-      content: input,
-      timestamp: new Date(),
-    }
-    setMessages((prev) => [...prev, userMessage])
-    setInput("")
+    setLoading(true)
+    setResponse(null)
 
-    // Имитация ответа от AI
+    // Имитация запроса к AI
     setTimeout(() => {
-      const aiResponse: AIMessage = {
-        role: "assistant",
-        content: `Я анализирую ваш запрос: "${input}". Для более точного ответа мне нужно больше данных. Вы можете уточнить период, продукты или другие параметры, которые вас интересуют?`,
-        timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, aiResponse])
-    }, 1000)
+      setResponse(
+        "На основе анализа данных за последние 3 месяца, я рекомендую увеличить инвестиции в маркетинговый канал 'Социальные сети', так как он показывает наилучшую конверсию (4.2%) и ROI (320%). Также стоит обратить внимание на сегмент 'Молодые профессионалы', который демонстрирует рост на 18% по сравнению с предыдущим периодом.",
+      )
+      setLoading(false)
+    }, 2000)
   }
 
-  const toggleExpanded = () => {
-    setExpanded(!expanded)
-  }
-
-  if (collapsed) {
-    return (
-      <div className="border-l border-gray-800 bg-gray-900 w-10 flex flex-col items-center py-2">
-        <Button variant="ghost" size="icon" onClick={onToggle} className="h-8 w-8 text-gray-400 hover:text-white">
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" className="h-8 w-8 text-gray-400 hover:text-white mt-2">
-          <Bot className="h-4 w-4" />
-        </Button>
-      </div>
-    )
-  }
+  const suggestions = [
+    { icon: <BarChart2 className="h-4 w-4" />, text: "Проанализируй эффективность маркетинговых каналов" },
+    { icon: <TrendingUp className="h-4 w-4" />, text: "Предскажи продажи на следующий квартал" },
+    { icon: <LineChart className="h-4 w-4" />, text: "Найди аномалии в данных за последний месяц" },
+    { icon: <Sparkles className="h-4 w-4" />, text: "Предложи стратегию для увеличения конверсии" },
+  ]
 
   return (
-    <div
-      className={cn(
-        "border-l border-gray-800 bg-gray-900 flex flex-col transition-all duration-300",
-        expanded ? "w-1/2" : "w-80",
-      )}
-    >
-      <div className="flex items-center justify-between p-2 border-b border-gray-800">
-        <div className="flex items-center">
-          <Bot className="h-4 w-4 text-indigo-400 mr-2" />
-          <span className="text-sm font-medium">AI Assistant</span>
+    <Card className="mb-6">
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <div className="flex items-center gap-2">
+          <Brain className="h-5 w-5 text-primary" />
+          <CardTitle className="text-lg">AI-ассистент</CardTitle>
         </div>
-        <div className="flex items-center">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleExpanded}
-            className="h-6 w-6 text-gray-400 hover:text-white"
-          >
-            {expanded ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
-          </Button>
-          <Button variant="ghost" size="icon" onClick={onToggle} className="h-6 w-6 text-gray-400 hover:text-white">
-            <ChevronRight className="h-3 w-3" />
-          </Button>
-        </div>
-      </div>
-
-      <ScrollArea className="flex-1 p-3">
-        <div className="space-y-4">
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              className={cn("flex items-start gap-3", message.role === "assistant" ? "flex-row" : "flex-row-reverse")}
-            >
-              {message.role === "assistant" ? (
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-indigo-600 text-white">AI</AvatarFallback>
-                </Avatar>
-              ) : (
-                <Avatar className="h-8 w-8">
-                  <AvatarFallback className="bg-gray-700 text-white">U</AvatarFallback>
-                </Avatar>
-              )}
-              <div
-                className={cn(
-                  "rounded-lg px-3 py-2 max-w-[80%]",
-                  message.role === "assistant" ? "bg-gray-800 text-gray-200" : "bg-indigo-600 text-white",
-                )}
-              >
-                <p className="text-sm">{message.content}</p>
-                <p className="text-xs text-gray-400 mt-1">
-                  {message.timestamp.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
-                </p>
+        <Button variant="ghost" size="icon" onClick={onClose}>
+          <X className="h-4 w-4" />
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {response ? (
+          <div className="bg-muted/50 p-4 rounded-lg">
+            <div className="flex items-start gap-2">
+              <Brain className="h-5 w-5 text-primary mt-0.5" />
+              <div className="flex-1">
+                <p className="text-sm font-medium mb-1">Ответ AI-ассистента:</p>
+                <p className="text-sm">{response}</p>
               </div>
             </div>
-          ))}
-        </div>
-      </ScrollArea>
-
-      <div className="p-3 border-t border-gray-800">
-        <div className="flex items-center gap-2">
-          <Input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && !e.shiftKey) {
-                e.preventDefault()
-                handleSendMessage()
-              }
-            }}
+          </div>
+        ) : (
+          <div className="space-y-3">
+            <p className="text-sm text-muted-foreground">Популярные запросы:</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {suggestions.map((suggestion, index) => (
+                <Button
+                  key={index}
+                  variant="outline"
+                  className="justify-start h-auto py-2 px-3"
+                  onClick={() => setQuery(suggestion.text)}
+                >
+                  <div className="flex items-center gap-2">
+                    {suggestion.icon}
+                    <span className="text-sm">{suggestion.text}</span>
+                  </div>
+                </Button>
+              ))}
+            </div>
+          </div>
+        )}
+        <div className="relative">
+          <Textarea
             placeholder="Задайте вопрос AI-ассистенту..."
-            className="bg-gray-800 border-gray-700 text-gray-200"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="pr-10"
+            rows={3}
           />
-          <Button onClick={handleSendMessage} size="icon" className="bg-indigo-600 hover:bg-indigo-700 text-white">
+          <Button
+            size="icon"
+            variant="ghost"
+            className="absolute right-2 bottom-2"
+            onClick={handleSubmit}
+            disabled={!query.trim() || loading}
+          >
             <Send className="h-4 w-4" />
           </Button>
         </div>
-      </div>
-    </div>
+      </CardContent>
+      <CardFooter className="text-xs text-muted-foreground">
+        AI-ассистент использует данные вашей аналитики для предоставления рекомендаций и прогнозов
+      </CardFooter>
+    </Card>
   )
 }

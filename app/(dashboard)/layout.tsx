@@ -1,19 +1,32 @@
 import type React from "react"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import type { Metadata } from "next"
 import { Sidebar } from "@/components/layout/sidebar"
-import { Header } from "@/components/layout/header"
+import { TopNav } from "@/components/navigation/top-nav"
+import { MobileSidebar } from "@/components/layout/mobile-sidebar"
+import { Footer } from "@/components/layout/footer"
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <SidebarProvider>
-      <Sidebar />
-      <SidebarInset>
-        <div className="flex flex-col h-screen">
-          <Header />
-          <main className="flex-1 overflow-y-auto bg-background p-6">{children}</main>
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
-  )
+export const metadata: Metadata = {
+  title: "Дашборд - UGAI",
+  description: "Управление бизнес-показателями",
 }
 
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <div className="flex min-h-screen flex-col">
+      <div className="flex flex-1">
+        <Sidebar className="hidden lg:block" />
+        <div className="flex w-full flex-1 flex-col">
+          <TopNav>
+            <MobileSidebar />
+          </TopNav>
+          <main className="flex-1 p-4 md:p-6">{children}</main>
+          <Footer />
+        </div>
+      </div>
+    </div>
+  )
+}

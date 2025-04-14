@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
@@ -20,7 +19,8 @@ import {
   LineChart,
   Line,
 } from "recharts"
-import { ArrowUpRight, ArrowDownRight, GraduationCap, Users, DollarSign, BookOpen, Brain } from "lucide-react"
+import { ArrowUpRight, ArrowDownRight, Brain } from "lucide-react"
+import { PersonalizedDashboard } from "@/components/analytics/personalized-dashboard" // Import the new component
 
 // Данные для графиков
 const enrollmentData = [
@@ -65,45 +65,7 @@ const revenueData = [
 export default function AnalyticsPage() {
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <MetricCard
-          title="Студенты"
-          value="1000"
-          change="+12%"
-          trend="up"
-          description="с прошлого месяца"
-          icon={<GraduationCap className="h-4 w-4 text-white" />}
-          color="bg-blue-600"
-        />
-        <MetricCard
-          title="Преподаватели"
-          value="45"
-          change="+3"
-          trend="up"
-          description="новых преподавателей"
-          icon={<Users className="h-4 w-4 text-white" />}
-          color="bg-indigo-600"
-        />
-        <MetricCard
-          title="Доход"
-          value="₽8.2M"
-          change="+18%"
-          trend="up"
-          description="с прошлого квартала"
-          icon={<DollarSign className="h-4 w-4 text-white" />}
-          color="bg-green-600"
-        />
-        <MetricCard
-          title="Курсы"
-          value="32"
-          change="+5"
-          trend="up"
-          description="новых курсов"
-          icon={<BookOpen className="h-4 w-4 text-white" />}
-          color="bg-purple-600"
-        />
-      </div>
-
+      <PersonalizedDashboard />
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>

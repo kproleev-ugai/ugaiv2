@@ -1,67 +1,35 @@
 version: '3'
 
 services:
-  api:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./app:/app
-    environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/ugai
-      - DIRECTUS_URL=http://directus:8055
-      - DIRECTUS_TOKEN=${DIRECTUS_TOKEN}
-      - DIRECTUS_EMAIL=${DIRECTUS_EMAIL}
-      - DIRECTUS_PASSWORD=${DIRECTUS_PASSWORD}
-      - SECRET_KEY=${SECRET_KEY}
-    depends_on:
-      - db
-      - directus
-    networks:
-      - ugai-network
-
-  db:
-    image: postgres:14
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=ugai
-    ports:
-      - "5432:5432"
-    networks:
-      - ugai-network
-
+  # Directus CMS
   directus:
     image: directus/directus:latest
     ports:
       - "8055:8055"
     volumes:
       - ./directus/uploads:/directus/uploads
+      - ./directus/database:/directus/database
       - ./directus/extensions:/directus/extensions
     environment:
       KEY: ${DIRECTUS_KEY}
       SECRET: ${DIRECTUS_SECRET}
-      DB_CLIENT: 'pg'
-      DB_HOST: 'db'
-      DB_PORT: '5432'
-      DB_DATABASE: 'ugai'
-      DB_USER: 'postgres'
-      DB_PASSWORD: 'postgres'
-      ADMIN_EMAIL: ${DIRECTUS_EMAIL}
-      ADMIN_PASSWORD: ${DIRECTUS_PASSWORD}
-      PUBLIC_URL: ${NEXT_PUBLIC_DIRECTUS_URL}
-    depends_on:
-      - db
-    networks:
-      - ugai-network
-
-networks:
-  ugai-network:
-    driver: bridge
-
-volumes:
-  postgres_data:
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
+      DB_CLIENT: "pg"
+      DB_HOST: ${POSTGRES_HOST}
+      DB_PORT: ${POSTGRES_PORT}
+      DB_DATABASE: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL}
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: ${ALLOWED_ORIGINS}
+      CACHE_ENABLED: "false"
+      RATE_LIMITER_ENABLED: "false"
+      
+  # Mailhog для локальной отправки email
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - "1025:1025" # SMTP сервер
+      - "8025:8025" # Веб-интерфейс

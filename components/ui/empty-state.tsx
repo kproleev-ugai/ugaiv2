@@ -1,13 +1,13 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
+import { FileQuestion } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import type { LucideIcon } from "lucide-react"
 
 interface EmptyStateProps {
-  icon?: LucideIcon
+  icon?: ReactNode
   title: string
-  description: string
+  description?: string
   action?: {
     label: string
     onClick: () => void
@@ -15,12 +15,14 @@ interface EmptyStateProps {
   className?: string
 }
 
-export function EmptyState({ icon: Icon, title, description, action, className }: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, className = "" }: EmptyStateProps) {
   return (
-    <div className={cn("flex flex-col items-center justify-center p-8 text-center", className)}>
-      {Icon && <Icon className="h-12 w-12 text-muted-foreground/50 mb-4" />}
-      <h3 className="text-lg font-medium">{title}</h3>
-      <p className="text-sm text-muted-foreground mt-2 max-w-md">{description}</p>
+    <div className={`flex flex-col items-center justify-center text-center p-8 ${className}`}>
+      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
+        {icon || <FileQuestion className="h-10 w-10 text-muted-foreground" />}
+      </div>
+      <h3 className="mt-4 text-lg font-semibold">{title}</h3>
+      {description && <p className="mt-2 text-sm text-muted-foreground max-w-sm">{description}</p>}
       {action && (
         <Button onClick={action.onClick} className="mt-4">
           {action.label}
