@@ -10,7 +10,7 @@
     --card-foreground: 240 10% 3.9%;
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
+    --primary: 240 70% 49%;
     --primary-foreground: 0 0% 98%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -22,34 +22,18 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 5.9% 10%;
+    --ring: 240 70% 49%;
     --radius: 0.5rem;
 
-    /* Градиенты */
-    --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    --gradient-secondary: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
-    --gradient-accent: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%);
-    --gradient-sidebar: linear-gradient(180deg, rgba(238, 242, 255, 0.5) 0%, rgba(224, 231, 255, 0.2) 100%);
-    --gradient-card: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-    --gradient-ai: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-
-    /* Цвета для графиков */
-    --chart-1: 221.2 83.2% 53.3%;
-    --chart-2: 226 70% 55.5%;
-    --chart-3: 269.2 79.7% 65.1%;
-    --chart-4: 336 80% 57.8%;
-    --chart-5: 0 72.2% 50.6%;
-    --chart-6: 24.6 95% 53.1%;
-    --chart-7: 40 96% 51%;
-    --chart-8: 142.1 76.2% 36.3%;
-    --chart-9: 172.5 66% 50.4%;
-    --chart-10: 198.4 93.2% 59.6%;
-
-    /* AI colors */
-    --chart-blue: 221.2 83.2% 53.3%;
-    --chart-indigo: 226 70% 55.5%;
-    --chart-purple: 269.2 79.7% 65.1%;
-    --chart-green: 142.1 76.2% 36.3%;
+    /* Chart colors */
+    --chart-1: 240 70% 49%;
+    --chart-2: 262 83% 58%;
+    --chart-3: 221 83% 53%;
+    --chart-4: 198 93% 60%;
+    --chart-5: 173 80% 40%;
+    --chart-6: 130 55% 50%;
+    --chart-7: 43 96% 58%;
+    --chart-8: 0 91% 71%;
   }
 
   .dark {
@@ -59,8 +43,8 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 240 70% 49%;
+    --primary-foreground: 0 0% 98%;
     --secondary: 240 3.7% 15.9%;
     --secondary-foreground: 0 0% 98%;
     --muted: 240 3.7% 15.9%;
@@ -71,15 +55,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 3.7% 15.9%;
     --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-
-    /* Градиенты для темной темы */
-    --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-    --gradient-secondary: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    --gradient-accent: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-    --gradient-sidebar: linear-gradient(180deg, rgba(30, 41, 59, 0.5) 0%, rgba(15, 23, 42, 0.2) 100%);
-    --gradient-card: linear-gradient(135deg, #1f2937 0%, #111827 100%);
-    --gradient-ai: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --ring: 240 70% 49%;
   }
 }
 
@@ -90,100 +66,4 @@
   body {
     @apply bg-background text-foreground;
   }
-}
-
-/* Animations */
-.fade-in {
-  animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* Metric card styles */
-.metric-card {
-  @apply relative overflow-hidden rounded-lg border bg-gradient-to-br from-white to-gray-50 p-4 shadow-sm transition-all hover:shadow-md dark:from-gray-800 dark:to-gray-900;
-}
-
-.metric-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  @apply bg-gradient-to-r from-blue-500 to-indigo-600;
-}
-
-/* Chart container styles */
-.chart-container {
-  @apply rounded-lg border bg-white p-3 shadow-sm dark:bg-gray-800;
-}
-
-/* Compact UI styles */
-.compact-text {
-  @apply text-xs;
-}
-
-.compact-button {
-  @apply h-7 text-xs;
-}
-
-.compact-input {
-  @apply h-7 text-xs;
-}
-
-.compact-select {
-  @apply h-7 text-xs;
-}
-
-.compact-card {
-  @apply p-3;
-}
-
-.compact-icon {
-  @apply h-3.5 w-3.5;
-}
-
-/* AI-specific styles */
-.ai-badge {
-  font-size: 9px;
-  height: 0.875rem;
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  padding-top: 0;
-  padding-bottom: 0;
-  border-color: rgb(229 231 235);
-  background-color: rgb(239 246 255);
-  color: rgb(29 78 216);
-}
-
-.dark .ai-badge {
-  background-color: rgba(30, 58, 138, 0.3);
-  color: rgb(96 165 250);
-  border-color: rgb(30 58 138);
-}
-
-.ai-insight {
-  @apply mt-2 rounded-md border border-indigo-100 bg-indigo-50 p-2 dark:border-indigo-900 dark:bg-indigo-900/20;
-}
-
-.ai-text {
-  @apply text-indigo-700 dark:text-indigo-400;
-}
-
-/* Hide scrollbar but allow scrolling */
-.hide-scrollbar {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
-.hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
 }

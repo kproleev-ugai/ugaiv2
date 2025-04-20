@@ -1,14 +1,18 @@
 import type React from "react"
 import "./globals.css"
-import { Inter } from "next/font/google"
+import type { Metadata } from "next"
+import { Mona_Sans as FontSans } from "next/font/google"
+import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
-import { AuthProvider } from "@/hooks/use-auth"
 
-const inter = Inter({ subsets: ["latin", "cyrillic"] })
+const fontSans = FontSans({
+  subsets: ["latin", "cyrillic"],
+  variable: "--font-sans",
+})
 
-export const metadata = {
-  title: "UGAI - Аналитическая платформа",
-  description: "Аналитическая платформа для бизнеса",
+export const metadata: Metadata = {
+  title: "StrategyAI - Платформа для управления стратегией, метриками и командами",
+  description: "Платформа для управления стратегией, метриками и командами с AI-ассистентом",
     generator: 'v0.dev'
 }
 
@@ -19,14 +23,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ru" suppressHydrationWarning>
-      <body className={inter.className}>
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <AuthProvider>{children}</AuthProvider>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          {children}
         </ThemeProvider>
       </body>
     </html>
   )
 }
-
-
-import './globals.css'

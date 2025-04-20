@@ -53,6 +53,11 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // UGAI brand colors
+        ugai: {
+          blue: "#3742c2", // The blue color from the logo
+          black: "#000000",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
